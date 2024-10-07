@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
+
+    <!-- Mapbox CSS and JS -->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js'></script>
+
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .sidenav {
+            width: 250px;
+            flex-shrink: 0;
+            background-color: #f8f9fa;
+            overflow-y: auto;
+        }
+
+        .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0; /* Removido padding para melhor aproveitamento da altura */
+            overflow: hidden; /* Evitar barras de rolagem */
+        }
+
+        #map {
+            flex-grow: 1; /* Faz o mapa ocupar todo o espaço disponível */
+        }
+
+        /* Estilos para o link ativo e hover */
+        .nav-link.active {
+            background-color: #A1D96E; /* Cor de fundo para o item ativo */
+            color: #FFFFFF; /* Cor do texto, se necessário */
+        }
+
+        .nav-link:hover {
+            background-color: #A1D96E; /* Cor de fundo ao passar o mouse */
+            color: #FFFFFF; /* Cor do texto ao passar o mouse */
+        }
+    </style>
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
+        <div class="sidenav-header">
+            <a class="navbar-brand m-0" target="_blank">
+                <img src="../assets/img/logos/logo1.png" class="navbar-brand-img img-fluid p-1" alt="main_logo" style="max-height: 120px;">
+            </a>
+        </div>
+        <hr class="horizontal dark mt-5">
+        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="../pages/dashboard.html">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <svg width="12px" height="12px" viewBox="0 0 45 40" xmlns="http://www.w3.org/2000/svg">
+                                <g fill="#FFFFFF" fill-rule="nonzero">
+                                    <path class="color-background opacity-6" d="M46.7199583,10.7414583 ..."></path>
+                                </g>
+                            </svg>
+                        </div>
+                        <span class="nav-link-text ms-1">Mappa</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../pages/tables.html">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <svg width="12px" height="12px" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
+                                <g fill="#FFFFFF" fill-rule="nonzero">
+                                    <path class="color-background opacity-6" d="M12.25,17.5 L8.75,17.5 ..."></path>
+                                </g>
+                            </svg>
+                        </div>
+                        <span class="nav-link-text ms-1">Dashbaord</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </aside>
+
+    <div class="content">
+        <div id="map"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      mapboxgl.accessToken = 'pk.eyJ1IjoibXVpbG9rb2RpbiIsImEiOiJjbHVleXpjN2sxdjZqMmttZmt3bHI3MzU3In0._VWgNvQt_1ltR1745_gZIA';
+      const map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/satellite-streets-v11',
+          center: [-49.946, -21.483],
+          zoom: 14
+      });
+
+      // Adiciona controles de zoom ao mapa
+      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+      // Função para recentralizar o mapa
+      function recentralizar() {
+          map.setCenter([-49.946, -21.483]); // Reconfigure com as coordenadas desejadas
+          map.setZoom(14); // Ajuste o nível de zoom se necessário
+      }
+
+      // Adicione um evento de clique para recentralizar o mapa
+      map.on('click', (e) => {
+          recentralizar();
+      });
+  </script>
+</body>
+
+</html>
