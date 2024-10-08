@@ -21,42 +21,126 @@
             display: flex;
             height: 100vh;
             margin: 0;
+            overflow-x: hidden; /* Remover barra de rolagem horizontal */
         }
 
         .sidenav {
             width: 250px;
             flex-shrink: 0;
-            background-color: #f8f9fa;
+            background-color: #FFFFFF;
             overflow-y: auto;
+            transition: width 0.3s;
+        }
+
+        .sidenav.collapsed {
+            width: 70px;
         }
 
         .content {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            padding: 0; /* Removido padding para melhor aproveitamento da altura */
-            overflow: hidden; /* Evitar barras de rolagem */
+            padding: 0;
+            overflow: hidden;
         }
 
         #map {
-            flex-grow: 1; /* Faz o mapa ocupar todo o espaço disponível */
+            flex-grow: 1;
         }
 
-        /* Estilos para o link ativo e hover */
         .nav-link.active {
-            background-color: #A1D96E; /* Cor de fundo para o item ativo */
-            color: #FFFFFF; /* Cor do texto, se necessário */
+            background-color: #A1D96E;
+            color: #FFFFFF;
         }
 
         .nav-link:hover {
-            background-color: #A1D96E; /* Cor de fundo ao passar o mouse */
-            color: #FFFFFF; /* Cor do texto ao passar o mouse */
+            background-color: #A1D96E;
+            color: #FFFFFF;
+        }
+
+        .sidenav-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 120px;
+            transition: opacity 0.3s;
+        }
+
+        .sidenav.collapsed .sidenav-header {
+            opacity: 0;
+        }
+
+        .sidenav.collapsed .nav-link-text {
+            display: none;
+        }
+
+        /* Centralizar ícones nos itens do menu */
+        .icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px; /* Altura ajustada */
+            width: 50px;  /* Largura ajustada */
+        }
+
+        .icon svg {
+            width: 100%; /* Garantir que o ícone SVG ocupe todo o espaço disponível */
+            height: auto;
+        }
+
+        .menu-control {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .menu-control button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 70px;
+            width: 100%;
+        }
+
+        .menu-control button i {
+            font-size: 25px; /* Ajuste do tamanho do ícone */
+            position: fixed;
+            top: 50px;
+            left: 40px;
+        }
+
+        html, body {
+            overflow-x: hidden;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-icon {
+            margin-right: 10px; /* Espaçamento entre o ícone e o texto */
         }
     </style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
+        <div class="menu-control">
+            <!-- Ícone do menu hambúrguer -->
+            <button id="menuBtn" title="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
         <div class="sidenav-header">
             <a class="navbar-brand m-0" target="_blank">
                 <img src="../assets/img/logos/logo1.png" class="navbar-brand-img img-fluid p-1" alt="main_logo" style="max-height: 120px;">
@@ -66,7 +150,7 @@
         <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" href="../pages/dashboard.html">
+                    <a class="nav-link" href="../pages/dashboard.html">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 45 40" xmlns="http://www.w3.org/2000/svg">
                                 <g fill="#FFFFFF" fill-rule="nonzero">
@@ -74,7 +158,8 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Mappa</span>
+                        <span class="nav-link-text nav-icon"><i class="fas fa-map"></i></span>
+                        <span class="nav-link-text">Mappa</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -86,10 +171,10 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Dashbaord</span>
+                        <span class="nav-link-text nav-icon"><i class="fas fa-chart-line"></i></span> <!-- Ícone de gráfico -->
+                        <span class="nav-link-text">Dashboard</span>
                     </a>
                 </li>
-
             </ul>
         </div>
     </aside>
@@ -100,28 +185,32 @@
 
     <!-- Scripts -->
     <script>
-      mapboxgl.accessToken = 'pk.eyJ1IjoibXVpbG9rb2RpbiIsImEiOiJjbHVleXpjN2sxdjZqMmttZmt3bHI3MzU3In0._VWgNvQt_1ltR1745_gZIA';
-      const map = new mapboxgl.Map({
-          container: 'map',
-          style: 'mapbox://styles/mapbox/satellite-streets-v11',
-          center: [-49.946, -21.483],
-          zoom: 14
-      });
+        const sidenav = document.getElementById('sidenav-main');
+        const menuBtn = document.getElementById('menuBtn');
 
-      // Adiciona controles de zoom ao mapa
-      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+        menuBtn.addEventListener('click', () => {
+            sidenav.classList.toggle('collapsed');
+        });
 
-      // Função para recentralizar o mapa
-      function recentralizar() {
-          map.setCenter([-49.946, -21.483]); // Reconfigure com as coordenadas desejadas
-          map.setZoom(14); // Ajuste o nível de zoom se necessário
-      }
+        mapboxgl.accessToken = 'pk.eyJ1IjoibXVpbG9rb2RpbiIsImEiOiJjbHVleXpjN2sxdjZqMmttZmt3bHI3MzU3In0._VWgNvQt_1ltR1745_gZIA';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/satellite-streets-v11',
+            center: [-49.946, -21.483],
+            zoom: 14
+        });
 
-      // Adicione um evento de clique para recentralizar o mapa
-      map.on('click', (e) => {
-          recentralizar();
-      });
-  </script>
+        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+        function recentralizar() {
+            map.setCenter([-49.946, -21.483]);
+            map.setZoom(14);
+        }
+
+        map.on('click', (e) => {
+            recentralizar();
+        });
+    </script>
 </body>
 
 </html>
